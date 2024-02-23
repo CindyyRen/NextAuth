@@ -8,8 +8,10 @@ export async function POST(req) {
     const body = await req.json();
     const userData = body.formData;
     console.log(userData);
+    const { email, password } = userData;
     //Confirm data exists
-    if (!userData?.email || !userData.password) {
+    if (!email || !password) {
+      console.log('All fields are required.');
       return NextResponse.json(
         { message: 'All fields are required.' },
         { status: 400 }
@@ -27,10 +29,16 @@ export async function POST(req) {
       return NextResponse.json({ message: 'Duplicate Email' }, { status: 409 });
     }
 
-    const hashPassword = await bcrypt.hash(userData.password, 10);
-    userData.hashPassword = hashPassword;
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    userData.hashedPassword = hashedPassword;
 
-    const user = await prisma.user.create(userData);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        // password: userData.password, // Assuming your Prisma model has a 'password' field
+        hashedPassword: hashedPassword, // Use the hashed password here
+      },
+    });
     console.log(user);
     return NextResponse.json({ message: 'User Created.' }, { status: 201 });
   } catch (error) {

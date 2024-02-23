@@ -6,12 +6,12 @@ export default withAuth(
     console.log(req.nextUrl.pathname);
     console.log(req.nextauth.token.role);
 
-    if (
-      req.nextUrl.pathname.startsWith('/CreateUser') &&
-      req.nextauth.token.role != 'EMPLOYER'
-    ) {
-      return NextResponse.rewrite(new URL('/Denied', req.url));
-    }
+    // if (
+    //   req.nextUrl.pathname.startsWith('/CreateUser') &&
+    //   req.nextauth.token.role != 'EMPLOYER'
+    // ) {
+    //   return NextResponse.rewrite(new URL('/Denied', req.url));
+    // }
   },
   {
     callbacks: {
@@ -20,4 +20,5 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ['/CreateUser'] };
+// export const config = { matcher: ['/CreateUser'] };
+export const config = { matcher: [] };
